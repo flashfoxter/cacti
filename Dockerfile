@@ -3,6 +3,7 @@ MAINTAINER OEMS <oscaremu@gmail.com>
 
 # On 161104 the current release of cacti on ubuntu 14.04 is 0.8.8b
 ENV CACTI_VERSION 0.8.8b
+ENV JOB "*/5 * * * * php /var/www/html/cacti/poller.php"
 
 RUN set -x \
 	&& apt-get update && apt-get install -y supervisor apache2 mysql-server rrdtool curl \
@@ -30,6 +31,8 @@ RUN service mysql start & \
     && echo "create database cacti;" | mysql -u root \
 		&& echo "GRANT ALL ON cacti.* TO cactiuser@localhost IDENTIFIED BY 'cactiuser';" | mysql -u rootmysql -u root \
 		&& mysql -u root cacti < /var/www/html/cacti/cacti.sql
+
+RUN (crontab -u root -l; echo "$JOB" ) | crontab -u root -
 
 ADD supervisord.conf /etc/supervisord.conf
 
