@@ -35,12 +35,34 @@ cactiuser
 ~~~~
 With this default option, you run the database into the container, then **if you delete your container you delete your database also**, remember to make backup.
 
+Note: Remember that the default user and password of the Web interface on Cacti is admin.
+
 ### Using your own database files
 
 The internal database use MySql 5.5, using your own database (make backup of your original database before to load this docker):
 
 ~~~~bash
 docker run -d -p 80:80 -v $PWD/mysql:/var/lib/mysql oems/cacti
+~~~~
+
+#### How to get de default an clean database from this docker.
+
+You can to extract the default database if you want to use this image into some docker-compose for example:
+
+~~~~bash
+docker run --rm -it -v $PWD/mysql_org:/var/lib/mysql cacti sh -c "tar -xvf /mysql_basic.tar"
+~~~~
+
+Now in your work directory, is some directory like mysql_org, you can use this database files on your own instance.
+
+For example docker-compose:
+
+~~~~yaml
+services:
+  db:
+   image: mariadb
+   volumes:
+     - $PWD/mysql_org:/var/lib/mysql
 ~~~~
 
 ### Using your own database and your own configuration file.
