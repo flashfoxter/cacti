@@ -29,7 +29,7 @@ RUN mkdir -p /var/www/html/cacti \
 RUN service mysql start & \
 		sleep 10s  \
     && echo "create database cacti;" | mysql -u root \
-		&& echo "GRANT ALL ON cacti.* TO cactiuser@localhost IDENTIFIED BY 'cactiuser';" | mysql -u rootmysql -u root \
+		&& echo "GRANT ALL ON cacti.* TO cactiuser@'%' IDENTIFIED BY 'cactiuser';" | mysql -u rootmysql -u root \
 		&& mysql -u root cacti < /var/www/html/cacti/cacti.sql \
 		&& tar -cvf /mysql_basic.tar /var/lib/mysql
 
